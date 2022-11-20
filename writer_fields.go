@@ -3,6 +3,7 @@ package zlorderedconwriter
 import (
 	"bytes"
 	"sort"
+	"strconv"
 
 	"github.com/elliotchance/orderedmap/v2"
 	"github.com/rs/zerolog"
@@ -85,7 +86,16 @@ func (w OrderedConsoleWriter) writeFields(evt *orderedmap.OrderedMap[string, any
 
 		buf.WriteString(fn(field))
 
-		buf.WriteString(fv(evt.GetOrDefault(field, nil)))
+		switch fValue := evt.GetOrDefault(field, nil).(type) {
+		case string:
+			if needsQuote(fValue) {
+				buf.WriteString(fv(strconv.Quote(fValue)))
+			} else {
+				buf.WriteString(fv(fValue))
+			}
+		default:
+			buf.WriteString(fv(fValue))
+		}
 
 		if i < len(fields)-1 { // Skip space for last field
 			buf.WriteByte(' ')
