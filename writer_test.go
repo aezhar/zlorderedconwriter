@@ -243,7 +243,7 @@ func TestConsoleWriter(t *testing.T) {
 		}
 	})
 
-	t.Run("Write quoted message", func(t *testing.T) {
+	t.Run("Write space field", func(t *testing.T) {
 		buf := &bytes.Buffer{}
 		w := zlorderedconwriter.New(zerolog.ConsoleWriter{Out: buf, NoColor: true})
 
@@ -261,7 +261,7 @@ func TestConsoleWriter(t *testing.T) {
 		}
 	})
 
-	t.Run("Write quoted field", func(t *testing.T) {
+	t.Run("Write space message", func(t *testing.T) {
 		buf := &bytes.Buffer{}
 		w := zlorderedconwriter.New(zerolog.ConsoleWriter{Out: buf, NoColor: true})
 
