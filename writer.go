@@ -22,7 +22,11 @@ func (w OrderedConsoleWriter) Write(p []byte) (n int, err error) {
 	err = jsonparser.ObjectEach(p, func(k []byte, v []byte, t jsonparser.ValueType, pos int) error {
 		switch t {
 		case jsonparser.String:
-			evt.Set(string(k), string(v))
+			sv, err := jsonparser.ParseString(v)
+			if err != nil {
+				return err
+			}
+			evt.Set(string(k), sv)
 		case jsonparser.Number:
 			evt.Set(string(k), json.Number(v))
 		default:

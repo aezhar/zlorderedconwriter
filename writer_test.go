@@ -278,4 +278,22 @@ func TestConsoleWriter(t *testing.T) {
 			t.Errorf("Unexpected output %q, want: %q", actualOutput, expectedOutput)
 		}
 	})
+
+	t.Run("Write quoted field", func(t *testing.T) {
+		buf := &bytes.Buffer{}
+		w := zlorderedconwriter.New(zerolog.ConsoleWriter{Out: buf, NoColor: true})
+
+		evt := `{"level": "debug", "message": "Foobar", "foo": "baa \"baz\""}`
+
+		_, err := w.Write([]byte(evt))
+		if err != nil {
+			t.Errorf("Unexpected error when writing output: %s", err)
+		}
+
+		expectedOutput := `<nil> DBG Foobar foo="baa \"baz\""` + "\n"
+		actualOutput := buf.String()
+		if actualOutput != expectedOutput {
+			t.Errorf("Unexpected output %q, want: %q", actualOutput, expectedOutput)
+		}
+	})
 }
