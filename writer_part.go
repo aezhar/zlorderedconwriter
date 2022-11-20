@@ -11,8 +11,8 @@ import (
 func (w OrderedConsoleWriter) writePart(buf *bytes.Buffer, evt *orderedmap.OrderedMap[string, any], p string) {
 	var f zerolog.Formatter
 
-	if w.PartsExclude != nil && len(w.PartsExclude) > 0 {
-		for _, exclude := range w.PartsExclude {
+	if w.zcw.PartsExclude != nil && len(w.zcw.PartsExclude) > 0 {
+		for _, exclude := range w.zcw.PartsExclude {
 			if exclude == p {
 				return
 			}
@@ -21,34 +21,34 @@ func (w OrderedConsoleWriter) writePart(buf *bytes.Buffer, evt *orderedmap.Order
 
 	switch p {
 	case zerolog.LevelFieldName:
-		if w.FormatLevel == nil {
-			f = consoleDefaultFormatLevel(w.NoColor)
+		if w.zcw.FormatLevel == nil {
+			f = consoleDefaultFormatLevel(w.zcw.NoColor)
 		} else {
-			f = w.FormatLevel
+			f = w.zcw.FormatLevel
 		}
 	case zerolog.TimestampFieldName:
-		if w.FormatTimestamp == nil {
-			f = consoleDefaultFormatTimestamp(w.TimeFormat, w.NoColor)
+		if w.zcw.FormatTimestamp == nil {
+			f = consoleDefaultFormatTimestamp(w.zcw.TimeFormat, w.zcw.NoColor)
 		} else {
-			f = w.FormatTimestamp
+			f = w.zcw.FormatTimestamp
 		}
 	case zerolog.MessageFieldName:
-		if w.FormatMessage == nil {
+		if w.zcw.FormatMessage == nil {
 			f = consoleDefaultFormatMessage
 		} else {
-			f = w.FormatMessage
+			f = w.zcw.FormatMessage
 		}
 	case zerolog.CallerFieldName:
-		if w.FormatCaller == nil {
-			f = consoleDefaultFormatCaller(w.NoColor)
+		if w.zcw.FormatCaller == nil {
+			f = consoleDefaultFormatCaller(w.zcw.NoColor)
 		} else {
-			f = w.FormatCaller
+			f = w.zcw.FormatCaller
 		}
 	default:
-		if w.FormatFieldValue == nil {
+		if w.zcw.FormatFieldValue == nil {
 			f = consoleDefaultFormatFieldValue
 		} else {
-			f = w.FormatFieldValue
+			f = w.zcw.FormatFieldValue
 		}
 	}
 

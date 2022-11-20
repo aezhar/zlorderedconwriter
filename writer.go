@@ -11,18 +11,10 @@ import (
 	"github.com/rs/zerolog"
 )
 
-type OrderedConsoleWriter zerolog.ConsoleWriter
+type OrderedConsoleWriter struct{ zcw zerolog.ConsoleWriter }
 
 func (w OrderedConsoleWriter) Write(p []byte) (n int, err error) {
 	// Fix color on Windows
-	if w.Out == os.Stdout || w.Out == os.Stderr {
-		w.Out = colorable.NewColorable(w.Out.(*os.File))
-	}
-
-	if w.PartsOrder == nil {
-		w.PartsOrder = consoleDefaultPartsOrder()
-	}
-
 	var buf = consoleBufPool.Get()
 	defer consoleBufPool.Put(buf)
 
@@ -42,7 +34,7 @@ func (w OrderedConsoleWriter) Write(p []byte) (n int, err error) {
 		return n, fmt.Errorf("cannot decode event: %s", err)
 	}
 
-	for _, p := range w.PartsOrder {
+	for _, p := range w.zcw.PartsOrder {
 		w.writePart(buf, evt, p)
 	}
 
@@ -53,10 +45,17 @@ func (w OrderedConsoleWriter) Write(p []byte) (n int, err error) {
 		return n, err
 	}
 
-	_, err = buf.WriteTo(w.Out)
+	_, err = buf.WriteTo(w.zcw.Out)
 	return len(p), err
 }
 
 func New(w zerolog.ConsoleWriter) OrderedConsoleWriter {
-	return OrderedConsoleWriter(w)
+	if w.Out == os.Stdout || w.Out == os.Stderr {
+		w.Out = colorable.NewColorable(w.Out.(*os.File))
+	}
+
+	if w.PartsOrder == nil {
+		w.PartsOrder = consoleDefaultPartsOrder()
+	}
+	return OrderedConsoleWriter{zcw: w}
 }

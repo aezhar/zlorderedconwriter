@@ -16,7 +16,7 @@ func (w OrderedConsoleWriter) writeFields(evt *orderedmap.OrderedMap[string, any
 		field := el.Key
 
 		var isExcluded bool
-		for _, excluded := range w.FieldsExclude {
+		for _, excluded := range w.zcw.FieldsExclude {
 			if field == excluded {
 				isExcluded = true
 				break
@@ -58,28 +58,28 @@ func (w OrderedConsoleWriter) writeFields(evt *orderedmap.OrderedMap[string, any
 		var fv zerolog.Formatter
 
 		if field == zerolog.ErrorFieldName {
-			if w.FormatErrFieldName == nil {
-				fn = consoleDefaultFormatErrFieldName(w.NoColor)
+			if w.zcw.FormatErrFieldName == nil {
+				fn = consoleDefaultFormatErrFieldName(w.zcw.NoColor)
 			} else {
-				fn = w.FormatErrFieldName
+				fn = w.zcw.FormatErrFieldName
 			}
 
-			if w.FormatErrFieldValue == nil {
-				fv = consoleDefaultFormatErrFieldValue(w.NoColor)
+			if w.zcw.FormatErrFieldValue == nil {
+				fv = consoleDefaultFormatErrFieldValue(w.zcw.NoColor)
 			} else {
-				fv = w.FormatErrFieldValue
+				fv = w.zcw.FormatErrFieldValue
 			}
 		} else {
-			if w.FormatFieldName == nil {
-				fn = consoleDefaultFormatFieldName(w.NoColor)
+			if w.zcw.FormatFieldName == nil {
+				fn = consoleDefaultFormatFieldName(w.zcw.NoColor)
 			} else {
-				fn = w.FormatFieldName
+				fn = w.zcw.FormatFieldName
 			}
 
-			if w.FormatFieldValue == nil {
+			if w.zcw.FormatFieldValue == nil {
 				fv = consoleDefaultFormatFieldValue
 			} else {
-				fv = w.FormatFieldValue
+				fv = w.zcw.FormatFieldValue
 			}
 		}
 
